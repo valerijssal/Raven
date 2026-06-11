@@ -42,11 +42,11 @@ export default async function handler(req, res) {
     const propsHtml = matchedProps.map(p => `<li>${p.title}</li>`).join("");
 
     const html_text = `<body>`
-      + `<em><strong>Request type:</strong></em> ${requestType}<br/>`
-      + `<em><strong>Submitted by:</strong></em> ${session.user.email}<br/>`
-      + (notes ? `<em><strong>Notes:</strong></em> ${notes}<br/>` : "")
-      + `<br/><em><strong>People:</strong></em><ul>${peopleHtml}</ul>`
-      + `<em><strong>${excludeMode ? "Properties to EXCLUDE" : "Properties"} (${matchedProps.length}):</strong></em>`
+      + `<strong>Request type:</strong> ${requestType}<br>`
+      + `<strong>Submitted by:</strong> ${session.user.email}<br>`
+      + (notes ? `<strong>Notes:</strong> ${notes}<br>` : "")
+      + `<br><strong>People:</strong><ul>${peopleHtml}</ul>`
+      + `<strong>${excludeMode ? "Properties to EXCLUDE" : "Properties"} (${matchedProps.length}):</strong>`
       + `<ul>${propsHtml}</ul>`
       + `</body>`;
 
