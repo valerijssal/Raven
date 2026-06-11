@@ -79,7 +79,7 @@ export default async function handler(req, res) {
     .select()
     .single();
 
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) return res.status(500).json({ error: error.message, details: error.details, hint: error.hint, code: error.code });
 
   // Create Asana task (best-effort, never blocks submission)
   createAsanaTask({ requestType, notes, people, selectedUuids, excludeMode }, session.user.email)
