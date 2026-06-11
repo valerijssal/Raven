@@ -34,17 +34,21 @@ export default async function handler(req, res) {
     const propLines = matchedProps.map(p => `• ${p.title}`).join("\n");
 
     const taskName = `[CASS] ${requestType} — ${(people || []).map(p => p.name).join(", ")}`;
-    const notes_text = [
-      `Request type: ${requestType}`,
-      `Submitted by: ${session.user.email}`,
-      ``,
-      `People:`,
-      ...(people || []).map(p => `• ${p.name} — ${p.roles.join(", ")}`),
-      ``,
-      excludeMode ? `Properties to EXCLUDE (${matchedProps.length}):` : `Properties (${matchedProps.length}):`,
-      propLines,
-      notes ? `\nNotes: ${notes}` : "",
-    ].filter(l => l !== undefined).join("\n");
+
+    const peopleHtml = (people || []).map(p =>
+      `<li><strong>${p.name}</strong> — ${p.roles.join(", ")}</li>`
+    ).join("");
+
+    const propsHtml = matchedProps.map(p => `<li>${p.title}</li>`).join("");
+
+    const html_text = `<body>`
+      + `<em><strong>Request type:</strong></em> ${requestType}<br/>`
+      + `<em><strong>Submitted by:</strong></em> ${session.user.email}<br/>`
+      + (notes ? `<em><strong>Notes:</strong></em> ${notes}<br/>` : "")
+      + `<br/><em><strong>People:</strong></em><ul>${peopleHtml}</ul>`
+      + `<em><strong>${excludeMode ? "Properties to EXCLUDE" : "Properties"} (${matchedProps.length}):</strong></em>`
+      + `<ul>${propsHtml}</ul>`
+      + `</body>`;
 
     fetch("https://app.asana.com/api/1.0/tasks", {
       method: "POST",
@@ -53,7 +57,7 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        data: { name: taskName, notes: notes_text, projects: ["1210527837423031"] }
+        data: { name: taskName, html_notes: html_text, projects: ["1210527837423031"] }
       }),
     }).catch(err => console.error("Asana error:", err.message));
   }
