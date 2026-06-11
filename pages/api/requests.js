@@ -41,7 +41,6 @@ async function createAsanaTask(requestData, submittedBy) {
         notes: description,
         projects: [ASANA_PROJECT_ID],
         memberships: [{ project: ASANA_PROJECT_ID, section: ASANA_SECTION_ID }],
-        assignee: submittedBy,
       }
     }),
   });
